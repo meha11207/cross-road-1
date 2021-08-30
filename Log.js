@@ -9,7 +9,6 @@ class Log{
         this.spt.velocityX = this.speed;
         this.spt.shapeColor = "brown";
         this.spt.scale=0.1;
-        this.spt.addAnimation("log",logAnimation)
     }
 
    
