@@ -1,109 +1,106 @@
+var grid = 50;
+var width = 1366;
+var carGroup1,logGroup1;
+var grassHeight = 100;
 
-const Engine = Matter.Engine;
-const World = Matter.World;
-const Bodies = Matter.Bodies;
-const Body = Matter.Body;
-
-var dground,tree,treeing;
-var boy,boying;
-var stones;
-var mango1,mango2,mango3,mango4,mango5,mango6,mango7,mango8,mango9,mango10;
+var carAnimation1,carAnimation2, logAnimation, playerAnimation,playerImage;
+var school;
+var city,cityAnimation;
 
 function preload()
 {
-	treeing = loadImage("tree.png");
-	boying = loadImage("boy.png");
+ carAnimation1 = loadAnimation("images/car1.png");
+ carAnimation2= loadAnimation("images/car2.png");
+ playerAnimation= loadAnimation("images/Player-03.png");
+ logAnimation= loadAnimation("images/log2.png");
+ cityAnimation= loadAnimation("images/city1.png","images/city2.png");
 }
 
 function setup() {
-	createCanvas(800, 700);
-
-
-	engine = Engine.create();
-	world = engine.world;
-
-	//Create the Bodies Here.
-     dground = new Ground();
-	 stones = new Stone(100,460,23)
-	 mango1 = new Mango(600,290,34)
-	 mango2 = new Mango(855,325,35)
-	 mango3 = new Mango(670,260,35)
-	 mango4 = new Mango(730,200,35)
-	 mango5 = new Mango(710,320,36)
-	 mango6 = new Mango(780,250,35)
-	 mango7 = new Mango(825,173,33)
-	 mango8 = new Mango(880,265,35)
-	 mango9= new Mango(940,220,35)
-	 mango10 = new Mango(980,305,35)
-
-	 attach = new Throw(stones.body,{x: 100,y:465})
-
-	 tree = createSprite(775,368)
-	 tree.addImage(treeing)
-	 tree.scale = 0.42
-
-	 boy = createSprite(160,550)
-	 boy.addImage(boying)
-	 boy.scale = 0.125
-
-	Engine.run(engine);
+  createCanvas(1366,2700);
+  carGroup1 = new Group();
+  logGroup1 = new Group();
   
-}
+  city= createSprite(width/2,-1500);
+  city.addAnimation("city",cityAnimation);
+  for(var i=0;i<6;i++)
+  {
+    var bottomGrass1= createSprite(683,height-50-(i*400)-grassHeight,width,grassHeight);
 
+    if(i%2===0)
+    {
+      var road= createSprite(683,height-150-(i*400)-grassHeight,width,300);
+      road.shapeColor="black";
+    }
+   
+  }
+  bottomGrass1.shapeColor="green";
+
+  for(var i = 0;i<40;i++)
+{
+  cars= new Car(2);
+  carGroup1.add(cars.spt);
+}
+for(var i = 0;i<40;i++)
+{
+  log= new Log(-2);
+  logGroup1.add(log.spt);
+}
+player= new Player(width/2,height-25);
+}
 
 function draw() {
-  rectMode(CENTER);
-  background("grey");
+  background("skyblue");
+  translate(0,-player.spt.y+height-150);
+  for(i=1;i<logGroup1.length;i++)
+  {
+    if(logGroup1.i<0)
+    logGroup1.x=width;
+  }
+  for(i=1;carGroup1.lenght;i++)
+  {
+    if(carGroup1.i<0){
+      carGroup1.x=width;
+    }
+   if(carGroup1.x=width){
+    carGroup1.x<0;
+   }
+  }
 
-  fill("black")
-  textSize(18)
+ if(carGroup1.isTouching(player.spt))
+ {
+   player.spt.x = width/2;
+   player.spt.y = height-75;
+ }
+ if(logGroup1.isTouching(player.spt))
+ {
+   player.spt.x = player.spt.x -3;
+ }
+ else if((player.spt.y>height-1550 && player.spt.y < height-1300)||
+  (player.spt.y < height-500 && player.spt.y > height-850)||
+  (player.spt.y>height)||
+  (player.spt.x<0)||
+  (player.spt.x>width))
+  {
+    player.spt.x=width/2;
+    player.spt.y = height-75;
+  }
+ 
 
-  detectCollision(stones,mango1)
-  detectCollision(stones,mango1)
-  detectCollision(stones,mango1)
-  detectCollision(stones,mango1)
-  detectCollision(stones,mango1)
-  detectCollision(stones,mango1)
-  detectCollision(stones,mango1)
-  detectCollision(stones,mango1)
-  detectCollision(stones,mango1)
-  detectCollision(stones,mango1)
-
-
-  stones.diaplay()
-  dground.display()
-  mango1.display()
-  mango2.display()
-  mango3.display()
-  mango4.display()
-  mango5.display()
-  mango6.display()
-  mango7.display()
-  mango8.display()
-  mango9.display()
-  mango10.display()
-
+  if(keyDown("up"))
+  {
+    player.move(0,-2);
+  } 
+   if(keyDown("down")){
+    player.move(0,2);
+  } 
+   if(keyDown("left")){
+    player.move(-2,0);
+  } 
+   if(keyDown("right")) {
+    player.move(2,0);
+  }
+  
 
   drawSprites();
- 
-}
-
-function mouseDragged(){
-	Matter.Body.setPosition(stones.body,{x:mouseX,y:mouseY})
-}
-function mouseReleased(){
-	attach.fly()
-}
-function detectCollision(lstones,lmango){
-	if(lstones.body.setPosition.x - lmango.body.setPosition.x <lmango.diametre + lstones.diametre
-		&& lmango.body.position.x - lstones.body.position.x <lmango.diametre + lstones.diametre
-		&& lmango.body.position.y - lstones.body.position.y <lmango.diametre + lstones.diamtre){
-			Matter.Body.setStatic(lmango.body,false)
-		}
-}
-function keyPressed(){
-	if(KeyCode === 32){
-		Matter.Body.setPosition(stones.body,{x:100,y:465})
-		attach.Launch(stones.body)
-	}
 }
